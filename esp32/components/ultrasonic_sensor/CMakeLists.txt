@@ -5,6 +5,7 @@ idf_component_register(
         "include"
     REQUIRES
         esp_driver_gpio
+        common
     PRIV_REQUIRES
         esp_timer
 )

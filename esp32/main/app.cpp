@@ -2,6 +2,10 @@
 #include "ultrasonic_sensor.hpp"
 #include "motor_driver.hpp"
 #include "uart.hpp"
+#include "queues.hpp"
+#include "robot.hpp"
+#include "config.hpp"
+
 
 void App::_init_pins() {
         // bit mask with output pins
@@ -30,7 +34,18 @@ void App::_init_pins() {
 void App::run() {
     _init_pins();
 
+    Queues queues;
+    queues.init();
+
     Uart uart(UART_BAUD, BUF_SIZE);
     uart.init(UART_RPI, RPI_TX_PIN, RPI_RX_PIN);
 
+    UltrasonicSensor ultrasonic(TRIG_PIN, ECHO_PIN);
+    ultrasonic.start_task();
+
+    Robot robot;
+    robot.start_task();
+
+    
+    
 }

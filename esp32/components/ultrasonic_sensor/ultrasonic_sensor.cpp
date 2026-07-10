@@ -1,6 +1,8 @@
 #include "ultrasonic_sensor.hpp"
-#include "freertos/FreeRTOS.h"
+#include "messages.hpp"
+#include "queues.hpp"
 
+#include "freertos/FreeRTOS.h"
 #include "esp_timer.h"
 
 UltrasonicSensor::UltrasonicSensor(gpio_num_t trig, gpio_num_t echo) {
@@ -44,4 +46,20 @@ float UltrasonicSensor::measure_distance_cm() {
     float distance_cm = (float)pulse_duration / 58.0;
 
     return distance_cm;
+}
+
+void UltrasonicSensor::start_task() {
+    xTaskCreatePinnedToCore(task, "sensors", 4096, nullptr, 3, nullptr, 0);
+}
+
+
+void UltrasonicSensor::task(void* arg) {
+    while(true) {
+        SensorData sensor_data;
+        sensor_data.distance_cm = measure_distance_cm();
+
+        xQueueSend(Queues::usonic_sensor_queue, &sensor_data, 0);
+
+        vTaskDelay(pdMS_TO_TICKS(50));
+    }
 }

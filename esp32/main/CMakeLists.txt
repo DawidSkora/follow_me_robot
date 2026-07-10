@@ -5,4 +5,6 @@ idf_component_register(
         ultrasonic_sensor
         motor_driver
         uart
+        robot
+        common
 )

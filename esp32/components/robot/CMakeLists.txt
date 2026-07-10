@@ -1,0 +1,9 @@
+idf_component_register(
+    SRCS
+        "robot.cpp"
+    INCLUDE_DIRS
+        "include"
+    REQUIRES
+        motor_driver
+        common
+)

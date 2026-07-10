@@ -1,6 +1,10 @@
 idf_component_register(
     SRCS
-        "src/*.cpp"
+        "ultrasonic_sensor.cpp"
     INCLUDE_DIRS
         "include"
+    REQUIRES
+        esp_driver_gpio
+    PRIV_REQUIRES
+        esp_timer
 )

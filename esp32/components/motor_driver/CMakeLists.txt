@@ -1,6 +1,8 @@
 idf_component_register(
     SRCS
-        "src/*.cpp"
+        "motor_driver.cpp"
     INCLUDE_DIRS
         "include"
+    REQUIRES
+        esp_driver_gpio
 )

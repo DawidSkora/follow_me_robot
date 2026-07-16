@@ -3,8 +3,12 @@
 
 
 QueueHandle_t Queues::usonic_sensor_queue = nullptr;
+QueueHandle_t Queues::uart_command_queue = nullptr;
 
 void Queues::init() {
     Queues::usonic_sensor_queue = xQueueCreate(1, sizeof(SensorData));
     configASSERT(Queues::usonic_sensor_queue != nullptr);
+
+    Queues::uart_command_queue = xQueueCreate(1, sizeof(UartCommand));
+    configASSERT(Queues::uart_command_queue != nullptr);
 }

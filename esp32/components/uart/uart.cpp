@@ -23,3 +23,12 @@ void Uart::init(uart_port_t port, int tx_pin, int rx_pin) {
     ESP_ERROR_CHECK(uart_set_pin(port, tx_pin, rx_pin,
                                   UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
 }
+
+void Uart::start_task() {
+    xTaskCreatePinnedToCore(task, "uart", 4096, this, 1, nullptr, 1);
+}
+
+void Uart::task(void* arg) {
+    auto* self = static_cast<Uart*>(arg);
+    self->listen();
+}

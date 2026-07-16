@@ -35,13 +35,9 @@ void App::run() {
     _init_pins();
 
     Queues::init();
-
-    // Uart uart(UART_BAUD, BUF_SIZE);
-    // uart.init(UART_RPI, RPI_TX_PIN, RPI_RX_PIN);
+    uart.init(UART_RPI, RPI_TX_PIN, RPI_RX_PIN);
 
     ultrasonic.start_task();
-    robot.start_task();
-
-    
-    
+    uart.start_task();
+    robot.start_task();    
 }

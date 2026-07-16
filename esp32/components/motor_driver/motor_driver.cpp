@@ -3,11 +3,8 @@
 
 static const int CHANGE_MODE_DELAY_MS = 100;
 
-MotorDriver::MotorDriver(gpio_num_t fl, gpio_num_t fr, gpio_num_t bl, gpio_num_t br) {
-    this->front_left = fl;
-    this->front_right = fr;
-    this->back_left = bl;
-    this->back_right = br;
+MotorDriver::MotorDriver(gpio_num_t fl, gpio_num_t fr, gpio_num_t bl, gpio_num_t br)
+    : driving_state(DrivingState::STOP), front_left(fl), front_right(fr), back_left(bl), back_right(br), speed(0) {
 }
 
 MotorDriver::~MotorDriver() {
@@ -65,7 +62,7 @@ void MotorDriver::move_backward() {
 }
 
 void MotorDriver::turn_left() {
-    soft_state_change(DrivingState::TUNR_LEFT);
+    soft_state_change(DrivingState::TURN_LEFT);
     right_side_direction(WheelDirection::FORWARD);
     left_side_direction(WheelDirection::BACKWARD);
 }

@@ -1,6 +1,6 @@
 #include "uart.hpp"
 
-Uart::Uart(uint32_t baudrate = 115200, uint32_t buffer = 1024) {
+Uart::Uart(uint32_t baudrate, uint32_t buffer) {
     _baudrate = baudrate;
     _buffer = buffer;
 }

@@ -6,4 +6,5 @@ idf_component_register(
     REQUIRES
         motor_driver
         common
+        esp_driver_gpio
 )

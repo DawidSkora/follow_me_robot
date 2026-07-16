@@ -34,16 +34,12 @@ void App::_init_pins() {
 void App::run() {
     _init_pins();
 
-    Queues queues;
-    queues.init();
+    Queues::init();
 
-    Uart uart(UART_BAUD, BUF_SIZE);
-    uart.init(UART_RPI, RPI_TX_PIN, RPI_RX_PIN);
+    // Uart uart(UART_BAUD, BUF_SIZE);
+    // uart.init(UART_RPI, RPI_TX_PIN, RPI_RX_PIN);
 
-    UltrasonicSensor ultrasonic(TRIG_PIN, ECHO_PIN);
     ultrasonic.start_task();
-
-    Robot robot;
     robot.start_task();
 
     

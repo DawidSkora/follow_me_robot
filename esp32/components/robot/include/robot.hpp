@@ -5,10 +5,11 @@
 
 class Robot {
 private:
-    MotorDriver motor_driver(FORWARD_LEFT, FORWARD_RIGHT, BACKWARD_LEFT, BACKWARD_RIGHT);
+    MotorDriver motor_driver{FORWARD_LEFT, FORWARD_RIGHT, BACKWARD_LEFT, BACKWARD_RIGHT};
     
-    void task();
-    void _search_for_the_way();
+    static void task(void* arg);
+    void task_loop();
+    void search_for_the_way();
 public:   
     void start_task();
 };

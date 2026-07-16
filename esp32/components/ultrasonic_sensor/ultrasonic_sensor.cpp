@@ -49,16 +49,17 @@ float UltrasonicSensor::measure_distance_cm() {
 }
 
 void UltrasonicSensor::start_task() {
-    xTaskCreatePinnedToCore(task, "sensors", 4096, nullptr, 3, nullptr, 0);
+    xTaskCreatePinnedToCore(task, "sensors", 4096, this, 3, nullptr, 0);
 }
 
 
 void UltrasonicSensor::task(void* arg) {
+    auto* self = static_cast<UltrasonicSensor*>(arg);
     while(true) {
         SensorData sensor_data;
-        sensor_data.distance_cm = measure_distance_cm();
+        sensor_data.distance_cm = self->measure_distance_cm();
 
-        xQueueSend(Queues::usonic_sensor_queue, &sensor_data, 0);
+        xQueueOverwrite(Queues::usonic_sensor_queue, &sensor_data);
 
         vTaskDelay(pdMS_TO_TICKS(50));
     }

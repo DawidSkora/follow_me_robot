@@ -6,7 +6,7 @@
 
 class MotorDriver {
 private:
-    enum class DrivingState { FORWARD, BACKWARD, TUNR_LEFT, TURN_RIGHT, STOP };
+    enum class DrivingState { FORWARD, BACKWARD, TURN_LEFT, TURN_RIGHT, STOP };
     enum class WheelDirection { FORWARD, BACKWARD, STOP };
     DrivingState driving_state;
     gpio_num_t front_left;

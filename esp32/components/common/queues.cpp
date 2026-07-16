@@ -5,5 +5,6 @@
 QueueHandle_t Queues::usonic_sensor_queue = nullptr;
 
 void Queues::init() {
-    usonic_sensor_queue = xQueueCreate(5, sizeof(SensorData));
+    Queues::usonic_sensor_queue = xQueueCreate(1, sizeof(SensorData));
+    configASSERT(Queues::usonic_sensor_queue != nullptr);
 }

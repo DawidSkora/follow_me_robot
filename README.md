@@ -47,18 +47,21 @@ pip install -r requirements.txt
 python main.py                 # detekcja + sterowanie autkiem (okno podglądu, `q` kończy)
 python main.py --no-uart       # tylko detekcja, bez wysyłania komend
 python main.py --no-display    # bez okna podglądu (np. przez ssh), status w konsoli
-python uart_test.py            # test łącza UART (/dev/ttyAMA0)
+python uart_test.py            # surowy test łącza UART (wysyła tekst; ESP32 nie odsyła echa)
 python vdeo_search.py          # sprawdzenie, które /dev/video* działają
 ```
 
 ## Dokumentacja
 
 - [`docs/protocol.md`](docs/protocol.md) – protokół komunikacji RPi ↔ ESP32
-- [`docs/hardware.md`](docs/hardware.md) – piny ESP32 i połączenia
+- [`docs/hardware.md`](docs/hardware.md) – piny ESP32, okablowanie RPi ↔ ESP32, uwagi sprzętowe
+- [`docs/testing.md`](docs/testing.md) – procedury testów na sprzęcie
 
 ## Status
 
-Work in progress. Szczegóły i znane braki: sekcja "Stan prac" w [`AGENTS.md`](AGENTS.md).
+Działa na sprzęcie (koła uniesione): sterowanie komendami UART, watchdog (stop po 500 ms bez komendy), blokada czujnika (< 20 cm), detekcja i pętla `main.py` (ok. 14 fps). Do zrobienia: test jazdy po podłodze. Szczegóły w [`AGENTS.md`](AGENTS.md).
+
+**Bezpieczeństwo:** robot fizycznie jeździ. Domyślnym stanem silników jest stop. Testy ruchu zawsze z uniesionymi kołami.
 
 ## Praca z agentami AI
 

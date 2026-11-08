@@ -5,18 +5,19 @@ Autko jeżdżące za człowiekiem: **ESP32** (silniki, czujnik, firmware C++/ESP
 ## Układ repo
 - `esp32/` – firmware ESP-IDF (target `esp32`), komponenty w `esp32/components/`, punkt wejścia `esp32/main/`.
 - `rpi/` – Python (OpenCV, ultralytics, pyserial), modele `yolov8n*`, `requirements.txt`.
-- `docs/` – `protocol.md` (UART RPi↔ESP32), `hardware.md` (piny).
+- `docs/` – `protocol.md` (UART RPi↔ESP32), `hardware.md` (piny, okablowanie), `testing.md` (testy na sprzęcie).
 
 ## Komendy
-- ESP32 (wymaga załadowanego ESP-IDF): `cd esp32 && idf.py build`; flash: `idf.py -p <port> flash monitor`.
-- RPi: Python **zawsze w venv** (`source ~/venv/bin/activate`), potem `pip install -r rpi/requirements.txt`.
+- ESP32: `cd esp32 && . ~/esp/esp-idf/export.sh && idf.py build`; flash: `idf.py -p /dev/ttyUSB0 flash` (wymaga zgody użytkownika, reguła `ask` w `.claude/settings.json`), `monitor` jest interaktywny – użytkownik odpala go sam (`! ...`).
+- RPi: Python **zawsze w venv** (`source ~/venv/bin/activate`), zależności: `rpi/requirements.txt`.
 - Brak automatycznych testów. Weryfikacja = build firmware'u + uruchomienie na sprzęcie.
 
 ## Raspberry Pi
 - Dostęp: `ssh pi-admin` (host `badgerhause`, użytkownik `adminbadger`), venv: `~/venv`.
-- Źródłem prawdy jest to repo. Zmiany robimy lokalnie, na RPi `git pull`. Nie edytuj plików na RPi na boku bez commita.
+- Kod na RPi: `~/workspace/follow_me_car/rpi` – to **kopia** (bez klona gita). Synchronizacja: lokalnie edytuj, potem `rsync -a --exclude __pycache__ rpi/ pi-admin:workspace/follow_me_car/rpi/`. Nie edytuj plików na RPi na boku.
 - Stary katalog `~/workspace/opencv` na RPi to kopia sprzed migracji; nie traktuj go jako aktualnego.
-- `main.py` otwiera okno podglądu (`cv2.imshow`) – wymaga środowiska graficznego; przez ssh bez DISPLAY nie zadziała.
+- Uruchamianie przez ssh: `python main.py --no-display` (bez okna). `cv2.imshow` bez flagi wymaga ekranu/DISPLAY. Kończenie przez `timeout` jest bezpieczne (SIGTERM wysyła stop).
+- Połączenie ESP32 po USB (`/dev/ttyUSB0`) bywa niestabilne i znika; przy flashu odepnij przewody UART od RPi.
 
 ## Konwencje
 - Protokół UART jest wspólny dla obu stron: zmianę rób po obu stronach w jednym commicie i aktualizuj `docs/protocol.md`.
@@ -28,7 +29,7 @@ Autko jeżdżące za człowiekiem: **ESP32** (silniki, czujnik, firmware C++/ESP
 ## Bezpieczeństwo (robot fizycznie jeździ)
 - Domyślnym stanem silników jest **stop**. Błąd, utrata łączności lub brak detekcji ⇒ stop.
 - Nie usuwaj ani nie osłabiaj zatrzymania przy przeszkodzie (`MIN_FRONT_DISTANCE_CM`) bez wyraźnej prośby.
-- Nie flashuj ani nie uruchamiaj jazdy na sprzęcie bez zgody użytkownika.
+- Nie flashuj ani nie uruchamiaj jazdy na sprzęcie bez zgody użytkownika. Testy ruchu tylko z uniesionymi kołami (użytkownik to potwierdza).
 
 ## Stan prac
 - Sterowanie: RPi wysyła co klatkę jednobajtową komendę (`rpi/main.py` → `rpi/car_link.py`), ESP32 parsuje ją w `Uart::listen()` i wrzuca do `uart_command_queue` (`xQueueOverwrite`), a `Robot` ją wykonuje.

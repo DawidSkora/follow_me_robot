@@ -19,7 +19,7 @@ Jeden bajt ASCII na komendę (obecna implementacja w `esp32/components/uart/uart
 | `r` | TurnRight | skręć w prawo |
 | `s` | Stop | zatrzymaj |
 
-Nieznane bajty są ignorowane.
+Nieznane bajty są ignorowane. ESP32 czyta po jednym bajcie, więc komenda jest obsługiwana od razu.
 
 ## Mapowanie kierunków z `rpi/main.py`
 
@@ -30,13 +30,14 @@ Nieznane bajty są ignorowane.
 | `RIGHT` | `r` |
 | `STOP_NO_OBJ`, `STOP_MIN_DIST` | `s` |
 
-`main.py` wysyła komendę dla bieżącego kierunku po każdej klatce. Przy zamknięciu programu lub braku klatki z kamery wysyła `s`.
+`main.py` wysyła komendę dla bieżącego kierunku po każdej klatce (ok. 14 razy na sekundę przy `yolov8n.pt` na RPi 5). Przy zamknięciu programu lub braku klatki z kamery wysyła `s`.
 
 ## Watchdog i bezpieczeństwo
 
 - Komendy trzeba **wysyłać cyklicznie**. ESP32 zatrzymuje się, jeśli przez 500 ms (`COMMAND_TIMEOUT_MS`) nie dostanie żadnej komendy.
 - `f` jest ignorowane (stop), gdy czujnik pokazuje <= `MIN_FRONT_DISTANCE_CM`, zwrócił błąd lub odczyt jest starszy niż 300 ms (`SENSOR_TIMEOUT_MS`).
 - Po starcie ESP32 stoi, aż dostanie komendę.
+- Debug: odebrane bajty (`uart`) i odległość (`sensor`) są logowane na poziomie `ESP_LOGD`.
 
 ## Do ustalenia
 

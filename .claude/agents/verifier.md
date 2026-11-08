@@ -10,7 +10,7 @@ effort: medium
 Przeczytaj AGENTS.md. Wykonaj checklistę. Każdy punkt oznacz jako PASS, FAIL albo SKIP, z komendą i krótkim fragmentem wyjścia:
 
 1. `git diff --stat` oraz `git diff --check`.
-2. `cd esp32 && idf.py build`. Jeśli ESP-IDF nie jest załadowany, zapisz SKIP. Nie zgaduj wyniku.
+2. `cd esp32 && . ~/esp/esp-idf/export.sh && idf.py build`. Jeśli `~/esp/esp-idf` nie istnieje, zapisz SKIP. Nie zgaduj wyniku.
 3. Składnia Pythona w rpi/ (`py_compile`), uruchamiana w venv: `source ~/venv/bin/activate`.
 4. Protokół: komendy f/b/l/r/s w uart.cpp, rpi/*.py i docs/protocol.md muszą się zgadzać.
 5. Piny: grep numerów GPIO poza config.hpp.

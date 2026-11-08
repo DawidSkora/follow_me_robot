@@ -30,12 +30,17 @@ Nieznane bajty są ignorowane.
 | `RIGHT` | `r` |
 | `STOP_NO_OBJ`, `STOP_MIN_DIST` | `s` |
 
-(Mapowanie docelowe: `main.py` na razie nic nie wysyła po UART.)
+`main.py` wysyła komendę dla bieżącego kierunku po każdej klatce. Przy zamknięciu programu lub braku klatki z kamery wysyła `s`.
+
+## Watchdog i bezpieczeństwo
+
+- Komendy trzeba **wysyłać cyklicznie**. ESP32 zatrzymuje się, jeśli przez 500 ms (`COMMAND_TIMEOUT_MS`) nie dostanie żadnej komendy.
+- `f` jest ignorowane (stop), gdy czujnik pokazuje <= `MIN_FRONT_DISTANCE_CM`, zwrócił błąd lub odczyt jest starszy niż 300 ms (`SENSOR_TIMEOUT_MS`).
+- Po starcie ESP32 stoi, aż dostanie komendę.
 
 ## Do ustalenia
 
-- Czy komendy powtarzać cyklicznie (watchdog po stronie ESP32: brak komendy przez X ms ⇒ stop)?
-- Odpowiedzi ESP32 → RPi (ACK, odległość z czujnika)?
+- Odpowiedzi ESP32 → RPi (ACK, odległość z czujnika).
 - Ewentualne przejście na ramki liniowe (`CMD\n`) zamiast pojedynczych bajtów.
 
 Każda zmiana protokołu musi być zrobiona po obu stronach w jednym commicie

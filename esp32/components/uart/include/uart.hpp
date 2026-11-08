@@ -4,14 +4,7 @@
 #include "freertos/task.h"
 #include "driver/gpio.h"
 #include "driver/uart.h"
-
-enum class UartCommandType {
-    UartCommandType_MoveForward,
-    UartCommandType_MoveBackward,
-    UartCommandType_TurnLeft,
-    UartCommandType_TurnRight,
-    UartCommandType_Stop
-};
+#include "messages.hpp"
 
 class Uart {
 private:

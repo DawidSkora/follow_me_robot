@@ -30,3 +30,8 @@ static constexpr uint32_t BUF_SIZE = 1024;
 
 // min distance after which cars stops
 static constexpr float MIN_FRONT_DISTANCE_CM = 20.0f;
+
+// safety timeouts (robot stops when they expire)
+static constexpr uint32_t COMMAND_TIMEOUT_MS = 500;  // no fresh command from RPi
+static constexpr uint32_t SENSOR_TIMEOUT_MS = 300;   // no fresh ultrasonic reading
+static constexpr uint32_t ROBOT_TICK_MS = 20;        // control loop period

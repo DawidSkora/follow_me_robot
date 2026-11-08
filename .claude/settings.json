@@ -6,6 +6,14 @@
       "Bash(git log:*)",
       "Bash(ssh pi-admin ls:*)",
       "Bash(ssh pi-admin cat:*)"
+    ],
+    "ask": [
+      "Bash(ssh pi-admin:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
+    ],
+    "deny": [
+      "Bash(idf.py flash:*)"
     ]
   }
 }

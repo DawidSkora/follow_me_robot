@@ -9,7 +9,6 @@ private:
     
     static void task(void* arg);
     void task_loop();
-    void search_for_the_way();
 public:   
     void start_task();
 };

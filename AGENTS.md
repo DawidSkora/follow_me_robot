@@ -31,6 +31,8 @@ Autko jeżdżące za człowiekiem: **ESP32** (silniki, czujnik, firmware C++/ESP
 - Nie flashuj ani nie uruchamiaj jazdy na sprzęcie bez zgody użytkownika.
 
 ## Stan prac
-- ESP32: `Uart::listen()` parsuje bajty `f/b/l/r/s`, ale komenda nie trafia jeszcze do kolejki ani do `Robot` (`TODO` w `uart.cpp`). Kolejka `uart_command_queue` istnieje (`UartCommand { char command[32]; }`), a `UartCommandType` jest zdefiniowany osobno w `uart.hpp`.
-- RPi: `main.py` wylicza kierunek, ale **nie wysyła** go po UART (tylko rysuje na podglądzie). `uart_test.py` to tylko echo-test łącza. Model ładowany jako `yolov8n.pt` (eksport do NCNN jest zakomentowany).
-- Do ustalenia: watchdog komend, odpowiedzi ESP32→RPi (patrz `docs/protocol.md`).
+- Sterowanie: RPi wysyła co klatkę jednobajtową komendę (`rpi/main.py` → `rpi/car_link.py`), ESP32 parsuje ją w `Uart::listen()` i wrzuca do `uart_command_queue` (`xQueueOverwrite`), a `Robot` ją wykonuje.
+- Zabezpieczenia w `Robot`: brak świeżej komendy przez `COMMAND_TIMEOUT_MS` ⇒ stop; jazda do przodu tylko przy świeżym odczycie czujnika > `MIN_FRONT_DISTANCE_CM` (błąd czujnika ⇒ stop). Autonomiczne omijanie przeszkód zostało usunięte.
+- Nic z tego nie było jeszcze testowane na sprzęcie (firmware tylko się buduje). Pierwszy test: koła uniesione nad podłożem.
+- `main.py` ma flagi `--port` i `--no-uart` (sama detekcja, bez jazdy). Detekcja traci osobę dopiero po `MAX_FRAMES_WITHOUT_DETECTION` klatkach, do tego czasu jedzie ostatnim kierunkiem.
+- Do ustalenia: odpowiedzi ESP32→RPi (patrz `docs/protocol.md`).

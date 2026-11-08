@@ -1,4 +1,5 @@
 #include "uart.hpp"
+#include "queues.hpp"
 
 Uart::Uart(uint32_t baudrate, uint32_t buffer) {
     _baudrate = baudrate;
@@ -6,41 +7,40 @@ Uart::Uart(uint32_t baudrate, uint32_t buffer) {
 }
 
 void Uart::listen() {
-    uint8_t data[128];
-    int length = 0;
+    uint8_t byte = 0;
 
     while (true) {
-        // Read data from UART
-        length = uart_read_bytes(_port, data, sizeof(data), pdMS_TO_TICKS(100));
-
-        // Process each received byte as a command
-        for (int i = 0; i < length; i++) {
-            char cmd = (char)data[i];
-            UartCommandType command;
-
-            // Parse command from character
-            switch (cmd) {
-                case 'f':
-                    command = UartCommandType::UartCommandType_MoveForward;
-                    break;
-                case 'b':
-                    command = UartCommandType::UartCommandType_MoveBackward;
-                    break;
-                case 'l':
-                    command = UartCommandType::UartCommandType_TurnLeft;
-                    break;
-                case 'r':
-                    command = UartCommandType::UartCommandType_TurnRight;
-                    break;
-                case 's':
-                    command = UartCommandType::UartCommandType_Stop;
-                    break;
-                default:
-                    continue;  // Skip unknown commands
-            }
-
-            // TODO: Handle the parsed command (e.g., dispatch to handler or store in queue)
+        // Read one byte at a time so a command is handled immediately
+        // (a larger buffer would wait for the whole timeout).
+        int length = uart_read_bytes(_port, &byte, 1, pdMS_TO_TICKS(100));
+        if (length != 1) {
+            continue;
         }
+
+        UartCommand command;
+        switch ((char)byte) {
+            case 'f':
+                command.type = UartCommandType::UartCommandType_MoveForward;
+                break;
+            case 'b':
+                command.type = UartCommandType::UartCommandType_MoveBackward;
+                break;
+            case 'l':
+                command.type = UartCommandType::UartCommandType_TurnLeft;
+                break;
+            case 'r':
+                command.type = UartCommandType::UartCommandType_TurnRight;
+                break;
+            case 's':
+                command.type = UartCommandType::UartCommandType_Stop;
+                break;
+            default:
+                continue;  // Skip unknown bytes
+        }
+
+        // Queue holds only the latest command; Robot applies it and
+        // treats it as stale after COMMAND_TIMEOUT_MS.
+        xQueueOverwrite(Queues::uart_command_queue, &command);
     }
 }
 

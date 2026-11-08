@@ -46,6 +46,7 @@ source ~/venv/bin/activate
 pip install -r requirements.txt
 python main.py                 # detekcja + sterowanie autkiem (okno podglądu, `q` kończy)
 python main.py --no-uart       # tylko detekcja, bez wysyłania komend
+python main.py --no-display    # bez okna podglądu (np. przez ssh), status w konsoli
 python uart_test.py            # test łącza UART (/dev/ttyAMA0)
 python vdeo_search.py          # sprawdzenie, które /dev/video* działają
 ```

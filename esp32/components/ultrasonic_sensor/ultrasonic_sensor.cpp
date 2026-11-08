@@ -4,6 +4,9 @@
 
 #include "freertos/FreeRTOS.h"
 #include "esp_timer.h"
+#include "esp_log.h"
+
+static const char* TAG = "sensor";
 
 UltrasonicSensor::UltrasonicSensor(gpio_num_t trig, gpio_num_t echo) {
     this->trig = trig;
@@ -55,11 +58,18 @@ void UltrasonicSensor::start_task() {
 
 void UltrasonicSensor::task(void* arg) {
     auto* self = static_cast<UltrasonicSensor*>(arg);
+    int log_counter = 0;
     while(true) {
         SensorData sensor_data;
         sensor_data.distance_cm = self->measure_distance_cm();
 
         xQueueOverwrite(Queues::usonic_sensor_queue, &sensor_data);
+
+        // Debug log (enable with LOG_LOCAL_LEVEL / esp_log_level_set): ~once per second
+        if (++log_counter >= 20) {
+            log_counter = 0;
+            ESP_LOGD(TAG, "distance: %.1f cm", sensor_data.distance_cm);
+        }
 
         vTaskDelay(pdMS_TO_TICKS(50));
     }

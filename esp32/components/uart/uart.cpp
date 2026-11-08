@@ -1,5 +1,8 @@
 #include "uart.hpp"
 #include "queues.hpp"
+#include "esp_log.h"
+
+static const char* TAG = "uart";
 
 Uart::Uart(uint32_t baudrate, uint32_t buffer) {
     _baudrate = baudrate;
@@ -16,6 +19,7 @@ void Uart::listen() {
         if (length != 1) {
             continue;
         }
+        ESP_LOGD(TAG, "rx byte: 0x%02x '%c'", byte, (byte >= 32 && byte < 127) ? (char)byte : '?');
 
         UartCommand command;
         switch ((char)byte) {

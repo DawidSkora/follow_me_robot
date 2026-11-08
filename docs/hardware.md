@@ -6,16 +6,17 @@
 
 | Funkcja | GPIO |
 |---------|------|
-| Silnik lewy – przód | 16 |
-| Silnik lewy – tył | 17 |
-| Silnik prawy – przód | 18 |
-| Silnik prawy – tył | 5 |
+| Silnik lewy – przód | 18 |
+| Silnik lewy – tył | 5 |
+| Silnik prawy – przód | 16 |
+| Silnik prawy – tył | 17 |
 | HC-SR04 TRIG | 33 |
 | HC-SR04 ECHO | 32 |
 | Wbudowana dioda LED | 2 |
 | UART1 RX (z TX RPi) | 21 |
 | UART1 TX (do RX RPi) | 22 |
 
+Lewa/prawa strona liczona od tyłu autka (zweryfikowane na sprzęcie, strony były zamienione względem pierwszego opisu).
 UART nie używa GPIO16/17, bo kolidują z pinami silników.
 
 Stała `MIN_FRONT_DISTANCE_CM = 20` – poniżej tej odległości autko się zatrzymuje.

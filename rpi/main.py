@@ -1,4 +1,4 @@
-import argparse, cv2, time, os
+import argparse, cv2, signal, sys, time, os
 from enum import Enum
 from ultralytics import YOLO
 from collections import deque
@@ -61,13 +61,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", default=DEFAULT_PORT, help="UART port to the ESP32")
     parser.add_argument("--no-uart", action="store_true", help="run detection only, do not drive the car")
+    parser.add_argument("--no-display", action="store_true", help="no preview window (e.g. over ssh); print status to stdout instead")
     args = parser.parse_args()
+    # make SIGTERM (e.g. `timeout`) run the finally block, which sends stop
+    signal.signal(signal.SIGTERM, lambda *_: sys.exit(0))
 
     link = None if args.no_uart else CarLink(args.port)
     model = prepare_model()
 
     cap = cv2.VideoCapture(0)
     prev_time = 0
+    last_print = 0
     frames_without_detection = 0
     direction = Direction.STOP_NO_DETECTION
     try:
@@ -122,17 +126,23 @@ def main():
             if link:
                 link.send(DIRECTION_TO_COMMAND[direction])
 
-            cv2.imshow('YOLO Detekcja', annotated_frame)
+            if args.no_display:
+                if time.time() - last_print > 1.0:
+                    last_print = time.time()
+                    print(f"{direction.value:14s} fps={fps:.1f} boxes={len(boxes)}", flush=True)
+            else:
+                cv2.imshow('YOLO Detekcja', annotated_frame)
         
             prev_time = current_time
-            if cv2.waitKey(1) & 0xFF == ord('q'):
+            if not args.no_display and cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
     finally:
         if link:
             link.close()
     cap.release()
-    cv2.destroyAllWindows()
+    if not args.no_display:
+        cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()

@@ -33,6 +33,7 @@ Autko jeżdżące za człowiekiem: **ESP32** (silniki, czujnik, firmware C++/ESP
 ## Stan prac
 - Sterowanie: RPi wysyła co klatkę jednobajtową komendę (`rpi/main.py` → `rpi/car_link.py`), ESP32 parsuje ją w `Uart::listen()` i wrzuca do `uart_command_queue` (`xQueueOverwrite`), a `Robot` ją wykonuje.
 - Zabezpieczenia w `Robot`: brak świeżej komendy przez `COMMAND_TIMEOUT_MS` ⇒ stop; jazda do przodu tylko przy świeżym odczycie czujnika > `MIN_FRONT_DISTANCE_CM` (błąd czujnika ⇒ stop). Autonomiczne omijanie przeszkód zostało usunięte.
-- Nic z tego nie było jeszcze testowane na sprzęcie (firmware tylko się buduje). Pierwszy test: koła uniesione nad podłożem.
-- `main.py` ma flagi `--port` i `--no-uart` (sama detekcja, bez jazdy). Detekcja traci osobę dopiero po `MAX_FRAMES_WITHOUT_DETECTION` klatkach, do tego czasu jedzie ostatnim kierunkiem.
+- Przetestowane na sprzęcie (koła uniesione): komendy `f/b/l/r/s`, watchdog, blokada czujnika, pełna pętla `main.py` z kamerą (około 13,8 fps na `yolov8n.pt`). Jazda po podłodze jeszcze nie testowana.
+- Debug: `ESP_LOGD` dla odebranych bajtów (`uart`) i odległości (`sensor`); żeby je zobaczyć, podnieś poziom logów w `sdkconfig`/`esp_log_level_set`.
+- `main.py` ma flagi `--port`, `--no-uart` (sama detekcja, bez jazdy) i `--no-display` (bez okna, np. przez ssh). Detekcja traci osobę dopiero po `MAX_FRAMES_WITHOUT_DETECTION` klatkach, do tego czasu jedzie ostatnim kierunkiem.
 - Do ustalenia: odpowiedzi ESP32→RPi (patrz `docs/protocol.md`).

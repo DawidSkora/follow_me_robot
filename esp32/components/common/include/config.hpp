@@ -6,10 +6,11 @@
 #include "driver/uart.h"
 
 // motors control
-static constexpr gpio_num_t FORWARD_LEFT = GPIO_NUM_16;
-static constexpr gpio_num_t BACKWARD_LEFT = GPIO_NUM_17;
-static constexpr gpio_num_t FORWARD_RIGHT = GPIO_NUM_18;
-static constexpr gpio_num_t BACKWARD_RIGHT = GPIO_NUM_5;
+// (left/right as seen from behind the car; verified on hardware)
+static constexpr gpio_num_t FORWARD_LEFT = GPIO_NUM_18;
+static constexpr gpio_num_t BACKWARD_LEFT = GPIO_NUM_5;
+static constexpr gpio_num_t FORWARD_RIGHT = GPIO_NUM_16;
+static constexpr gpio_num_t BACKWARD_RIGHT = GPIO_NUM_17;
 
 // embedded led
 static constexpr gpio_num_t LED_PIN = GPIO_NUM_2;

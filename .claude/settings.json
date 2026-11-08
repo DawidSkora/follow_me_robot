@@ -10,10 +10,8 @@
     "ask": [
       "Bash(ssh pi-admin:*)",
       "Bash(git commit:*)",
+      "Bash(idf.py flash:*)",
       "Bash(git push:*)"
-    ],
-    "deny": [
-      "Bash(idf.py flash:*)"
     ]
   }
 }

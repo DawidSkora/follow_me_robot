@@ -6,10 +6,46 @@ Uart::Uart(uint32_t baudrate, uint32_t buffer) {
 }
 
 void Uart::listen() {
-    
+    uint8_t data[128];
+    int length = 0;
+
+    while (true) {
+        // Read data from UART
+        length = uart_read_bytes(_port, data, sizeof(data), pdMS_TO_TICKS(100));
+
+        // Process each received byte as a command
+        for (int i = 0; i < length; i++) {
+            char cmd = (char)data[i];
+            UartCommandType command;
+
+            // Parse command from character
+            switch (cmd) {
+                case 'f':
+                    command = UartCommandType::UartCommandType_MoveForward;
+                    break;
+                case 'b':
+                    command = UartCommandType::UartCommandType_MoveBackward;
+                    break;
+                case 'l':
+                    command = UartCommandType::UartCommandType_TurnLeft;
+                    break;
+                case 'r':
+                    command = UartCommandType::UartCommandType_TurnRight;
+                    break;
+                case 's':
+                    command = UartCommandType::UartCommandType_Stop;
+                    break;
+                default:
+                    continue;  // Skip unknown commands
+            }
+
+            // TODO: Handle the parsed command (e.g., dispatch to handler or store in queue)
+        }
+    }
 }
 
 void Uart::init(uart_port_t port, int tx_pin, int rx_pin) {
+    _port = port;  // Store port for use in listen()
     uart_config_t cfg = {};
     cfg.baud_rate = _baudrate;
     cfg.data_bits = UART_DATA_8_BITS;

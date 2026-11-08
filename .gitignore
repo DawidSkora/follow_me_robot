@@ -1,0 +1,9 @@
+# editors / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# agent local state
+.claude/settings.local.json
+CLAUDE.local.md

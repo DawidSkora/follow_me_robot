@@ -5,10 +5,19 @@
 #include "driver/gpio.h"
 #include "driver/uart.h"
 
+enum class UartCommandType {
+    UartCommandType_MoveForward,
+    UartCommandType_MoveBackward,
+    UartCommandType_TurnLeft,
+    UartCommandType_TurnRight,
+    UartCommandType_Stop
+};
+
 class Uart {
 private:
     uint32_t _baudrate;
     uint32_t _buffer;
+    uart_port_t _port;
 
     static void task(void* arg);
 

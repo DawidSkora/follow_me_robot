@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(ssh pi-admin ls:*)",
+      "Bash(ssh pi-admin cat:*)"
+    ]
+  }
+}
